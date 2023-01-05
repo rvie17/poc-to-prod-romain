@@ -1,6 +1,6 @@
 import unittest
 
-from preprocessing.preprocessing.embeddings import embed
+from preproc.preprocessing.embeddings import embed
 
 
 class EmbeddingsTest(unittest.TestCase):

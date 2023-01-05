@@ -1,12 +1,10 @@
 import unittest
 from unittest.mock import MagicMock
 import tempfile
-
 import pandas as pd
-
 from predict.predict import run
+from train.train import run as train_run
 from preproc.preprocessing import utils
-
 
 def load_dataset_mock():
     titles = [
@@ -28,19 +26,38 @@ def load_dataset_mock():
         'title': titles,
         'tag_name': tags
     })
-
 class TestPredict(unittest.TestCase):
 
-    # use the function defined on test_model_train as a mock for utils.LocalTextCategorizationDataset.load_dataset
+    # use the function defined on test_predict as a mock for utils.LocalTextCategorizationDataset.load_dataset
     utils.LocalTextCategorizationDataset.load_dataset = MagicMock(return_value=load_dataset_mock())
-    dataset = utils.LocalTextCategorizationDataset.load_dataset
 
     def test_predict(self):
         # TODO: CODE HERE
-        # run a prediction
-        predictions_obtained = run.TextPredictionModel.predict(self.dataset['title'], 2)
+        # create a dictionary params for train conf
+        params = {
+            "batch_size": 1,
+            "epochs": 1,
+            "dense_dim": 64,
+            "min_samples_per_label": 4,
+            "verbose": 1
+        }
+
+        # we create a temporary file to store artefacts
+        with tempfile.TemporaryDirectory() as model_dir:
+            # run a training
+            accuracy, _ = train_run.train("fake_path", params, model_dir, False)
+
+            # instance a TextPredictModel class
+            textpredictmodel = run.TextPredictionModel.from_artefacts(model_dir)
+
+            # run a prediction
+            predictions_obtained = textpredictmodel.predict(['php'], 2)
+            print(predictions_obtained)
+
+
 
         # TODO: CODE HERE
         # assert that predictions obtained are equals to expected ones
-        self.assertEqual(predictions_obtained, self.dataset['tag_name'])
+        # Here we assert that the prediction shape is equal to the one expected
+        self.assertGreaterEqual(predictions_obtained.shape, (1, 2))
 

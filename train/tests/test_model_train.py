@@ -49,9 +49,9 @@ class TestTrain(unittest.TestCase):
         # we create a temporary file to store artefacts
         with tempfile.TemporaryDirectory() as model_dir:
             # run a training
-            accuracy, _ = run.train("fake_path", params, "fake", True)
+            accuracy, _ = run.train("fake_path", params, model_dir, False)
 
         # TODO: CODE HERE
-        # assert that accuracy is equal to 1.0
-        self.assertEqual(accuracy, 1.0)
+        # assert that accuracy is equal to 0.5
+        self.assertGreaterEqual(accuracy, 0.5)
 

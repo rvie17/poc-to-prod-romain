@@ -3,7 +3,7 @@ import argparse
 import os
 import time
 from collections import OrderedDict
-
+import tensorflow as tf
 import numpy as np
 from keras.models import load_model
 from numpy import argsort
@@ -22,6 +22,13 @@ class TextPredictionModel:
         self.labels_to_index = labels_to_index
         self.labels_index_inv = {ind: lab for lab, ind in self.labels_to_index.items()}
 
+    def __eq__(self, target):
+        return\
+            self.model.__dir__() == target.model.__dir__() and\
+            self.params == target.params and\
+            self.labels_to_index == target.labels_to_index and\
+            self.labels_index_inv == target.labels_index_inv
+
     @classmethod
     def from_artefacts(cls, artefacts_path: str):
         """
@@ -30,16 +37,16 @@ class TextPredictionModel:
         """
         # TODO: CODE HERE
         # load model
-        model =load_model.load(artefacts_path/"model.h5")
+        model = load_model(f"{artefacts_path}/model.h5")
 
         # TODO: CODE HERE
         # load params
-        params = json.load(artefacts_path/"params.json")
-        # json.load(open(os.path.join(expt_dir, 'params.json'), 'rb'))
+
+        params = json.load(open(os.path.join(artefacts_path, 'params.json'), 'rb'))
 
         # TODO: CODE HERE
         # load labels_to_index
-        labels_to_index = json.load(artefacts_path/"labels_index.json")
+        labels_to_index = json.load(open(os.path.join(artefacts_path, 'labels_index.json'), 'rb'))
 
         return cls(model, params, labels_to_index)
 
@@ -52,21 +59,19 @@ class TextPredictionModel:
         tic = time.time()
 
         logger.info(f"Predicting text_list=`{text_list}`")
-
+        print(text_list)
         # TODO: CODE HERE
         # embed text_list
         embeddings = embed(text_list)
-
         # TODO: CODE HERE
         # predict tags indexes from embeddings
-        predict_embeddings = model.predict(embeddings)
-
+        predictions = self.model.predict(embeddings)
         # TODO: CODE HERE
         # from tags indexes compute top_k tags for each text
-        sorted_indexes = argsort(predict_embeddings)[-top_k:]
-        predict_embeddings = np.array(predict_embeddings)
-        predictions = predict_embeddings[sorted_indexes]
-
+        indices = argsort(predictions)[0][-top_k:]
+        
+        #list_indices = [index.argmin() for index in indices]
+        predictions = [self.labels_to_index.get(str(index)) for index in indices]
         logger.info("Prediction done in {:2f}s".format(time.time() - tic))
 
         return predictions

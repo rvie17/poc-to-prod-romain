@@ -46,12 +46,12 @@ class TestBaseTextCategorizationDataset(unittest.TestCase):
         base = utils.BaseTextCategorizationDataset(20, 0.8)
         # we mock _get_num_samples to return a list [value1,value2]
         base._get_label_list = MagicMock(return_value=['value_1', 'value_2'])
-        print(base._get_label_list())
+        # print(base._get_label_list())
         x = dict({
             0: 'value_1',
             1: 'value_2',
         })
-        print(x)
+        # print(x)
         self.assertEqual(base.get_index_to_label_map(), x)
 
     def test_index_to_label_and_label_to_index_are_identity(self):
@@ -114,7 +114,7 @@ class TestLocalTextCategorizationDataset(unittest.TestCase):
         dataset = utils.LocalTextCategorizationDataset("fake_path", batch_size=1, train_ratio=0.6,
                                                        min_samples_per_label=2)
         expected = 6
-        print(dataset._get_num_samples())
+        # print(dataset._get_num_samples())
         self.assertEqual(dataset._get_num_samples(), expected)
 
 
@@ -133,7 +133,6 @@ class TestLocalTextCategorizationDataset(unittest.TestCase):
                                                        min_samples_per_label=1)
 
         x, y = dataset.get_train_batch()
-        print(y.shape)
         self.assertTupleEqual(x.shape, (1,)) and self.assertTupleEqual(y.shape, (1, 5))
 
     def test_get_test_batch_returns_expected_shape(self):
@@ -151,7 +150,7 @@ class TestLocalTextCategorizationDataset(unittest.TestCase):
                                                        min_samples_per_label=1)
 
         x, y = dataset.get_test_batch()
-        print(y.shape)
+
         self.assertTupleEqual(x.shape, (1,)) and self.assertTupleEqual(y.shape, (1, 5))
 
     def test_get_train_batch_raises_assertion_error(self):
