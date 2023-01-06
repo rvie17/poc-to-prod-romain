@@ -1,0 +1,25 @@
+# README
+
+# Prerequisites
+Python 3.7
+Conda
+
+# Installation
+```bash 
+git clone https://github.com/rvie17poc-to-prod-romain
+```
+
+
+# Run flask micro-service application
+```bash 
+python app.py
+```
+## then you can do your CURL request 
+```bash 
+curl -X POST -H "Content-Type: application/json" -d '{"text": "help me with my javascript issue", "top_k":5}' http://localhost:5000/predict
+```
+## You should get the following results
+
+```string 
+The text is :  help me with my javascript issue  and the prediction is :  ['javascript', 'iphone', 'java', 'c#', 'php']  
+```
