@@ -50,7 +50,7 @@ class TextPredictionModel:
 
         return cls(model, params, labels_to_index)
 
-    def predict(self, text_list, top_k=5):
+    def predict(self, text_list, top_k=3):
         """
             predict top_k tags for a list of texts
             :param text_list: list of text (questions from stackoverflow)
