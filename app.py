@@ -14,7 +14,7 @@ import json
 app = Flask(__name__)
 
 
-@app.route('/predict', methods=['GET'])
+@app.route('/predict', methods=['POST'])
 def get_text():
     model = TextPredictionModel.from_artefacts("/Users/rvie/Documents/5A/Poc to prod/poc-to-prod-romain/train/data/artefacts/2023-01-03-12-42-59")
     
@@ -31,7 +31,7 @@ def get_text():
 def predict_demo():
     model = TextPredictionModel.from_artefacts("/Users/rvie/Documents/5A/Poc to prod/poc-to-prod-romain/train/data/artefacts/2023-01-03-12-42-59")
     
-    text = "this is a python script"
+    text = "C# issue"
 
     predictions = model.predict(text)
     

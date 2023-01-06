@@ -59,13 +59,15 @@ class TextPredictionModel:
         tic = time.time()
 
         logger.info(f"Predicting text_list=`{text_list}`")
-        print(text_list)
+        print("testlist",text_list)
         # TODO: CODE HERE
         # embed text_list
         embeddings = embed(text_list)
+        print(embeddings)
         # TODO: CODE HERE
         # predict tags indexes from embeddings
         predictions = self.model.predict(embeddings)
+        print(predictions)
         # TODO: CODE HERE
         # from tags indexes compute top_k tags for each text
         indices = argsort(predictions)[0][-top_k:]
